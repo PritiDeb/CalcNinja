@@ -65,7 +65,7 @@ input[id="tab2"]:checked~.bg-slider {
 
 .content {
     margin: 0 auto;
-    padding: 60px 10px 20px;
+    padding: 40px 10px 20px;
 }
 
 .tab-content {
