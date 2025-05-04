@@ -328,3 +328,8 @@ input[id="tab2"]:checked~.bg-slider {
     background-color: #6c757d; /* Gray */
     color: white;
 }
+
+a{
+    text-decoration: none;
+    color: #007bff;
+}

@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const contents = document.querySelectorAll(".tab-content");
 
     function updateTab() {
+        exitGame(); // Exit current game when switching tabs
         contents.forEach((content) => content.classList.remove("active"));
         if (tabs[0].checked) {
             document.getElementById("destination-content").classList.add("active");
@@ -35,6 +36,21 @@ document.addEventListener("DOMContentLoaded", function () {
     setupEventListeners();
     loadHighScores();
 });
+
+function exitGame() {
+    if (gameState.activeGame) {
+        clearInterval(gameState.timer);
+        const gameType = gameState.activeGame;
+        
+        const container = document.getElementById(`${gameType}-question`).closest(".tab-content");
+        container.querySelector(".game-settings").style.display = "block";
+        container.querySelector(".game-screen").style.display = "none";
+        container.querySelector(".high-scores").style.visibility = "visible";
+        document.getElementById(`${gameType}-scores`).style.display = "block";
+        
+        gameState.activeGame = null;
+    }
+}
 
 function setupEventListeners() {
     document.getElementById("tab1").addEventListener("change", () => switchTab("destination-content"));
@@ -86,6 +102,7 @@ function playTingSound() {
 }
 
 function switchTab(tabId) {
+    exitGame(); // Exit current game when switching tabs
     document.querySelectorAll(".tab-content").forEach((tab) => tab.classList.remove("active"));
     document.getElementById(tabId).classList.add("active");
 }
@@ -197,37 +214,36 @@ function endGame(gameType) {
 }
 
 function loadHighScores() {
-  const formatDate = (inputDate) => {
-      const [day, month, year] = inputDate.split("/").map(Number);
-      const date = new Date(year, month - 1, day);
-      const options = { month: "short", day: "2-digit" };
-      const formattedMonthDay = date.toLocaleDateString("en-US", options);
-      return `${formattedMonthDay}, '${String(year).slice(-2)}`;
-  };
+    const formatDate = (inputDate) => {
+        const [day, month, year] = inputDate.split("/").map(Number);
+        const date = new Date(year, month - 1, day);
+        const options = { month: "short", day: "2-digit" };
+        const formattedMonthDay = date.toLocaleDateString("en-US", options);
+        return `${formattedMonthDay}, '${String(year).slice(-2)}`;
+    };
 
-  ["square", "cube"].forEach((gameType) => {
-      const container = document.getElementById(`${gameType}-scores`);
-      const scores = gameState.highScores[gameType];
-      if (!scores.length) {
-          container.innerHTML = "<p>No scores yet</p>";
-          return;
-      }
-      container.innerHTML = `
-          <ol class="score-list">
-              ${scores.map(s => `
-                  <li>
-                      ${s.score}
-                      <span class="${s.mode.toLowerCase()}">${capitalize(s.mode)}</span>
-                      <span class="${s.level.toLowerCase()}">${capitalize(s.level)}</span>
-                      <span class="time-${s.time}">${s.time} min</span>
-                      <span class="date">${formatDate(s.date)}</span>
-                  </li>`).join("")}
-          </ol>
-      `;
-  });
+    ["square", "cube"].forEach((gameType) => {
+        const container = document.getElementById(`${gameType}-scores`);
+        const scores = gameState.highScores[gameType];
+        if (!scores.length) {
+            container.innerHTML = "<p>No scores yet</p>";
+            return;
+        }
+        container.innerHTML = `
+            <ol class="score-list">
+                ${scores.map(s => `
+                    <li>
+                        ${s.score}
+                        <span class="${s.mode.toLowerCase()}">${capitalize(s.mode)}</span>
+                        <span class="${s.level.toLowerCase()}">${capitalize(s.level)}</span>
+                        <span class="time-${s.time}">${s.time} min</span>
+                        <span class="date">${formatDate(s.date)}</span>
+                    </li>`).join("")}
+            </ol>
+        `;
+    });
 
-  function capitalize(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-  }
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 }
-
