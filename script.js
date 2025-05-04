@@ -197,13 +197,34 @@ function endGame(gameType) {
 }
 
 function loadHighScores() {
-    ["square", "cube"].forEach((gameType) => {
-        const container = document.getElementById(`${gameType}-scores`);
-        const scores = gameState.highScores[gameType];
-        if (!scores.length) {
-            container.innerHTML = "<p>No scores yet</p>";
-            return;
-        }
-        container.innerHTML = `<ol>${scores.map(s => `<li>${s.score} (${s.mode}, ${s.level}, ${s.time} min) - ${s.date}</li>`).join("")}</ol>`;
-    });
+  const formatDate = (dateStr) => {
+      const date = new Date(dateStr);
+      const options = { month: 'short', day: '2-digit' };
+      const year = `'${String(date.getFullYear()).slice(-2)}`;
+      return `${date.toLocaleDateString('en-US', options)}, ${year}`;
+  };
+
+  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+  ["square", "cube"].forEach((gameType) => {
+      const container = document.getElementById(`${gameType}-scores`);
+      const scores = gameState.highScores[gameType];
+
+      if (!scores.length) {
+          container.innerHTML = "<p>No scores yet</p>";
+          return;
+      }
+
+      const listItems = scores.map(({ score, mode, level, time, date }) => `
+          <li>
+              <strong>${score}</strong> 
+              <span class="${mode}">${capitalize(mode)}</span> 
+              <span class="${level}">${capitalize(level)}</span> 
+              <span class="time-${time}">${time} Min</span> 
+              <span class="date">${formatDate(date)}</span>
+          </li>
+      `).join("");
+
+      container.innerHTML = `<ol class="score-list">${listItems}</ol>`;
+  });
 }

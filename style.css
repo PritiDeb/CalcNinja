@@ -226,6 +226,7 @@ input[id="tab2"]:checked~.bg-slider {
     margin-top: 10px;
     padding: 10px;
     background-color: #fafafa;
+    border: 1px solid #ddd;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -235,6 +236,7 @@ input[id="tab2"]:checked~.bg-slider {
     font-weight: 600;
     font-size: 1.2em;
     padding: 10px;
+    color: var(--accent-color);
 }
 
 .high-scores ol {
@@ -268,4 +270,61 @@ input[id="tab2"]:checked~.bg-slider {
 
 .footer{
     margin-top: 10px;
+}
+
+.score-list li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.score-list span {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    margin-left: px;
+    color: white;
+    font-weight: 500;
+}
+
+/* Modes */
+.direct {
+    background-color: #007bff; /* Blue */
+}
+
+.reverse {
+    background-color: #6f42c1; /* Purple */
+}
+
+/* Levels */
+.easy {
+    background-color: #28a745; /* Green */
+}
+
+.medium {
+    background-color: #ffc107; /* Yellow */
+    color: black;
+}
+
+.hard {
+    background-color: #dc3545; /* Red */
+}
+
+/* Times */
+.time-1 {
+    background-color: #17a2b8; /* Teal */
+}
+
+.time-2 {
+    background-color: #fd7e14; /* Orange */
+}
+
+.time-5 {
+    background-color: #343a40; /* Dark */
+}
+
+/* Date */
+.date {
+    background-color: #6c757d; /* Gray */
+    color: white;
 }
