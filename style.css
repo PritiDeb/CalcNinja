@@ -80,9 +80,9 @@ input[id="tab2"]:checked~.bg-slider {
 }
 
 .game-settings {
-    margin: 20px auto;
+    margin: 20px auto 10px auto;
     max-width: 500px;
-    padding: 20px;
+    padding: 10px;
     border: 1px solid #ddd;
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -95,11 +95,12 @@ input[id="tab2"]:checked~.bg-slider {
     display: grid;
     grid-template-columns: 90px 1fr;
     font-weight: bold;
+    margin: 0;
 }
 
 .game-settings select {
     padding: 10px 14px;
-    margin: 8px 5px;
+    margin: 2.5px 0;
     border: 1px solid #ccc;
     font-size: 1em;
     text-align: center;
@@ -120,7 +121,7 @@ input[id="tab2"]:checked~.bg-slider {
 }
 
 .game-settings button:hover {
-    background-color: #45a049;
+    background-color: #8d0b6a;
 }
 
 .game-screen {
@@ -243,10 +244,11 @@ input[id="tab2"]:checked~.bg-slider {
 }
 
 .high-scores li {
-    padding: 10px;
+    padding: 10px 20px;
     border-bottom: 1px solid #ddd;
     font-size: 0.95em;
     text-align: left;
+    border-radius: 0;
 }
 
 .high-scores li:last-child {
