@@ -273,7 +273,7 @@ input[id="tab2"]:checked~.bg-slider {
 }
 
 .score-list li {
-    margin-bottom: 10px;
+    margin-bottom: 2.5px;
     line-height: 1.6;
 }
 
