@@ -197,34 +197,37 @@ function endGame(gameType) {
 }
 
 function loadHighScores() {
-  const formatDate = (dateStr) => {
-      const date = new Date(dateStr);
-      const options = { month: 'short', day: '2-digit' };
-      const year = `'${String(date.getFullYear()).slice(-2)}`;
-      return `${date.toLocaleDateString('en-US', options)}, ${year}`;
+  const formatDate = (inputDate) => {
+      const [day, month, year] = inputDate.split("/").map(Number);
+      const date = new Date(year, month - 1, day);
+      const options = { month: "short", day: "2-digit" };
+      const formattedMonthDay = date.toLocaleDateString("en-US", options);
+      return `${formattedMonthDay}, '${String(year).slice(-2)}`;
   };
-
-  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
   ["square", "cube"].forEach((gameType) => {
       const container = document.getElementById(`${gameType}-scores`);
       const scores = gameState.highScores[gameType];
-
       if (!scores.length) {
           container.innerHTML = "<p>No scores yet</p>";
           return;
       }
-
-      const listItems = scores.map(({ score, mode, level, time, date }) => `
-          <li>
-              <strong>${score}</strong> 
-              <span class="${mode}">${capitalize(mode)}</span> 
-              <span class="${level}">${capitalize(level)}</span> 
-              <span class="time-${time}">${time} Min</span> 
-              <span class="date">${formatDate(date)}</span>
-          </li>
-      `).join("");
-
-      container.innerHTML = `<ol class="score-list">${listItems}</ol>`;
+      container.innerHTML = `
+          <ol class="score-list">
+              ${scores.map(s => `
+                  <li>
+                      ${s.score}
+                      <span class="${s.mode.toLowerCase()}">${capitalize(s.mode)}</span>
+                      <span class="${s.level.toLowerCase()}">${capitalize(s.level)}</span>
+                      <span class="time-${s.time}">${s.time} min</span>
+                      <span class="date">${formatDate(s.date)}</span>
+                  </li>`).join("")}
+          </ol>
+      `;
   });
+
+  function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 }
+
