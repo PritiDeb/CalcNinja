@@ -93,10 +93,9 @@ input[id="tab2"]:checked~.bg-slider {
     align-items: center;
     justify-content: center;
     display: grid;
-    grid-template-columns: 60px 1fr;
+    grid-template-columns: 90px 1fr;
     font-weight: bold;
     margin: 0;
-    text-align: left;
     color: var(--accent-color);
 }
 
