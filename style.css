@@ -10,6 +10,7 @@
 * {
     font-family: "Montserrat", sans-serif;
     box-sizing: border-box;
+    border-radius: 20px;
 }
 
 body {
@@ -23,8 +24,9 @@ body {
 
 .tabs {
     position: fixed;
-    top: 0;
-    width: 100%;
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
     display: flex;
     background: var(--secondary-color);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -66,7 +68,7 @@ input[id="tab2"]:checked~.bg-slider {
 
 .content {
     margin: 0 auto;
-    padding: 40px 10px 20px;
+    padding: 60px 10px 20px;
 }
 
 .tab-content {
@@ -82,19 +84,27 @@ input[id="tab2"]:checked~.bg-slider {
     max-width: 500px;
     padding: 20px;
     border: 1px solid #ddd;
-    border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.game-settings select,
-.game-settings button {
+.mode-select, .level-select, .time-select{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    font-weight: bold;
+}
+
+.game-settings select {
     padding: 10px 14px;
     margin: 8px 5px;
-    border-radius: 6px;
     border: 1px solid #ccc;
     font-size: 1em;
+    text-align: center;
 }
+
 
 .game-settings button {
     background-color: var(--accent-color);
@@ -102,6 +112,11 @@ input[id="tab2"]:checked~.bg-slider {
     border: none;
     cursor: pointer;
     font-weight: bold;
+    padding: 10px 14px;
+    margin: 8px 5px;
+    border: 1px solid #ccc;
+    font-size: 1.2em;
+    width: 100%;
 }
 
 .game-settings button:hover {
@@ -153,7 +168,6 @@ input[id="tab2"]:checked~.bg-slider {
     width: 220px;
     text-align: center;
     border: 2px solid #ddd;
-    border-radius: 6px;
     outline: none;
     border: none;
 }
@@ -161,7 +175,6 @@ input[id="tab2"]:checked~.bg-slider {
 .gs {
     border: 2px solid #ddd;
     padding: 20px;
-    border-radius: 20px;
 }
 
 .top-bar {
@@ -177,7 +190,6 @@ input[id="tab2"]:checked~.bg-slider {
     gap: 12px;
     border: 1px solid #ddd;
     padding: 20px 0;
-    border-radius: 20px;
 }
 
 .keypad-row {
@@ -188,7 +200,6 @@ input[id="tab2"]:checked~.bg-slider {
 .key {
     width: 80px;
     height: 60px;
-    border-radius: 20px;
     font-size: 1.5em;
     background: #fff;
     border: 1px solid #ccc;
@@ -211,19 +222,18 @@ input[id="tab2"]:checked~.bg-slider {
 }
 
 .high-scores {
-    margin-top: 30px;
-    padding: 20px;
+    margin-top: 10px;
+    padding: 10px;
     background-color: #fafafa;
-    border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .high-scores h3 {
-    margin-bottom: 10px;
+    margin: 0px;
+    text-align: left;
     font-weight: 600;
     font-size: 1.2em;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 5px;
+    padding: 10px;
 }
 
 .high-scores ol {
