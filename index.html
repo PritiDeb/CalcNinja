@@ -1,0 +1,175 @@
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CalcNinja</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <div class="tabs">
+        <input type="radio" id="tab1" name="tabs" checked>
+        <label class="tab" for="tab1">Square</label>
+
+        <input type="radio" id="tab2" name="tabs">
+        <label class="tab" for="tab2">Cube</label>
+
+        <span class="bg-slider"></span>
+    </div>
+
+    <div class="content">
+        <div class="tab-content" id="destination-content">
+            <div class="game-settings">
+                <div class="mode-select">
+                    <label>Mode:</label>
+                    <select id="square-mode">
+                        <option value="direct">Direct (n²)</option>
+                        <option value="reverse">Reverse (√n)</option>
+                    </select>
+                </div>
+                <div class="level-select">
+                    <label>Level:</label>
+                    <select id="square-level">
+                        <option value="easy">Easy (1-30)</option>
+                        <option value="medium">Medium (1-50)</option>
+                        <option value="hard">Hard (1-100)</option>
+                    </select>
+                </div>
+                <div class="time-select">
+                    <label>Time:</label>
+                    <select id="square-time">
+                        <option value="1">1 Minute</option>
+                        <option value="2">2 Minutes</option>
+                        <option value="5">5 Minutes</option>
+                    </select>
+                </div>
+                <button id="square-start">Start Game</button>
+            </div>
+
+            <div class="game-screen" style="display: none;">
+                <div class="gs">
+                    <div class="top-bar">
+                        <div class="score">Score: <span id="square-score">0</span></div>
+                        <div class="timer"><span id="square-timer">01:00</span></div>
+                    </div>
+
+                    <div class="question" id="square-question"></div>
+                    <div class="answer-input" disabled>
+                        <input type="number" id="square-answer" placeholder="answer">
+                    </div>
+                </div>
+
+                <div class="keypad">
+                    <div class="keypad-row">
+                        <button class="key">1</button>
+                        <button class="key">2</button>
+                        <button class="key">3</button>
+                    </div>
+                    <div class="keypad-row">
+                        <button class="key">4</button>
+                        <button class="key">5</button>
+                        <button class="key">6</button>
+                    </div>
+                    <div class="keypad-row">
+                        <button class="key">7</button>
+                        <button class="key">8</button>
+                        <button class="key">9</button>
+                    </div>
+                    <div class="keypad-row">
+                        <button class="key clear">C</button>
+                        <button class="key">0</button>
+                        <button class="key back"><i class="fas fa-backspace"></i></button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="high-scores">
+                <h3>Previous High Scores</h3>
+                <div id="square-scores"></div>
+            </div>
+
+            <div class="footer">
+                &copy; Amlan Saha Kundu, 2025
+            </div>
+        </div>
+        
+        <div class="tab-content" id="route-content">
+            <div class="game-settings">
+                <div class="mode-select">
+                    <label>Mode:</label>
+                    <select id="cube-mode">
+                        <option value="direct">Direct (n³)</option>
+                        <option value="reverse">Reverse (∛n)</option>
+                    </select>
+                </div>
+                <div class="level-select">
+                    <label>Level:</label>
+                    <select id="cube-level">
+                        <option value="easy">Easy (1-20)</option>
+                        <option value="medium">Medium (1-30)</option>
+                        <option value="hard">Hard (1-50)</option>
+                    </select>
+                </div>
+                <div class="time-select">
+                    <label>Time:</label>
+                    <select id="cube-time">
+                        <option value="1">1 Minute</option>
+                        <option value="2">2 Minutes</option>
+                        <option value="5">5 Minutes</option>
+                    </select>
+                </div>
+                <button id="cube-start">Start Game</button>
+            </div>
+
+            <div class="game-screen" style="display: none;">
+                <div class="gs">
+                    <div class="top-bar">
+                        <div class="score">Score: <span id="cube-score">0</span></div>
+                        <div class="timer"><span id="cube-timer">01:00</span></div>
+                    </div>
+                    <div class="question" id="cube-question"></div>
+                    <div class="answer-input">
+                        <input type="number" id="cube-answer" placeholder="answer">
+                    </div>
+                </div>
+                <div class="keypad">
+                    <div class="keypad-row">
+                        <button class="key">1</button>
+                        <button class="key">2</button>
+                        <button class="key">3</button>
+                    </div>
+                    <div class="keypad-row">
+                        <button class="key">4</button>
+                        <button class="key">5</button>
+                        <button class="key">6</button>
+                    </div>
+                    <div class="keypad-row">
+                        <button class="key">7</button>
+                        <button class="key">8</button>
+                        <button class="key">9</button>
+                    </div>
+                    <div class="keypad-row">
+                        <button class="key clear">C</button>
+                        <button class="key">0</button>
+                        <button class="key back"><i class="fas fa-backspace"></i></button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="high-scores">
+                <h3>Previous High Scores</h3>
+                <div id="cube-scores"></div>
+            </div>
+
+            <div class="footer">
+                &copy; Amlan Saha Kundu, 2025
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
