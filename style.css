@@ -136,8 +136,8 @@ input[id="tab2"]:checked~.bg-slider {
 }
 
 .question {
-    font-size: 4em;
-    margin: 0.75em 0 0.5em 0;
+    font-size: 3em;
+    margin: 0.5em 0 0.25em 0;
     font-weight: 600;
     min-height: 50px;
 }
@@ -185,8 +185,8 @@ input[id="tab2"]:checked~.bg-slider {
 }
 
 .key {
-    width: 96px;
-    height: 64px;
+    width: 80px;
+    height: 60px;
     border-radius: 20px;
     font-size: 1.5em;
     background: #fff;
@@ -251,4 +251,8 @@ input[id="tab2"]:checked~.bg-slider {
 .incorrect {
     color: var(--error-color);
     font-weight: bold;
+}
+
+.footer{
+    margin-top: 10px;
 }
