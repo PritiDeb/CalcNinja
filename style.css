@@ -125,7 +125,7 @@ input[id="tab2"]:checked~.bg-slider {
 
 .game-screen {
     max-width: 500px;
-    margin: 20px auto;
+    margin: 0 auto 20px auto;
     padding: 20px;
     border: none;
 }
