@@ -311,6 +311,10 @@ input[id="tab2"]:checked~.bg-slider {
     background-color: #dc3545; /* Red */
 }
 
+.custom {
+    background-color: #1057a8; /* Red */
+}
+
 /* Times */
 .time-1 {
     background-color: #17a2b8; /* Teal */
@@ -334,3 +338,73 @@ a{
     text-decoration: none;
     color: #007bff;
 }
+
+
+/* Modal overlay */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
+  }
+  
+  /* Modal content box */
+  .modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Close button */
+  .modal-content .close {
+    color: #888;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: -10px;
+  }
+  
+  .modal-content .close:hover {
+    color: #000;
+  }
+  
+  /* Modal buttons */
+  .modal-content button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #bfc6f4;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .modal-content button:hover {
+    background-color: #9da6e0;
+  }
+  
+  /* Input fields for custom range */
+  #custom-level-modal input[type="number"] {
+    display: block;
+    width: 100%;
+    margin: 10px auto;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+  

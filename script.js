@@ -15,13 +15,13 @@ const gameState = {
     },
 };
 
-// Wait until DOM is loaded
+// DOM Ready
 document.addEventListener("DOMContentLoaded", function () {
     const tabs = document.querySelectorAll('input[name="tabs"]');
     const contents = document.querySelectorAll(".tab-content");
 
     function updateTab() {
-        exitGame(); // Exit current game when switching tabs
+        exitGame();
         contents.forEach((content) => content.classList.remove("active"));
         if (tabs[0].checked) {
             document.getElementById("destination-content").classList.add("active");
@@ -41,13 +41,13 @@ function exitGame() {
     if (gameState.activeGame) {
         clearInterval(gameState.timer);
         const gameType = gameState.activeGame;
-        
+
         const container = document.getElementById(`${gameType}-question`).closest(".tab-content");
         container.querySelector(".game-settings").style.display = "block";
         container.querySelector(".game-screen").style.display = "none";
         container.querySelector(".high-scores").style.visibility = "visible";
         document.getElementById(`${gameType}-scores`).style.display = "block";
-        
+
         gameState.activeGame = null;
     }
 }
@@ -61,6 +61,22 @@ function setupEventListeners() {
 
     setupKeypad("square");
     setupKeypad("cube");
+
+    // Listen for "Custom" level changes to open modal
+    ["square", "cube"].forEach(gameType => {
+        const levelSelect = document.getElementById(`${gameType}-level`);
+        levelSelect.addEventListener("change", () => {
+            if (levelSelect.value === "custom") {
+                openCustomModal(gameType);
+            }
+        });
+    });
+
+    document.getElementById("close-modal").addEventListener("click", closeModal);
+    window.addEventListener("click", (e) => {
+        if (e.target.id === "score-modal") closeModal();
+        if (e.target.id === "custom-level-modal") closeCustomModal();
+    });
 }
 
 function setupKeypad(gameType) {
@@ -102,21 +118,26 @@ function playTingSound() {
 }
 
 function switchTab(tabId) {
-    exitGame(); // Exit current game when switching tabs
+    exitGame();
     document.querySelectorAll(".tab-content").forEach((tab) => tab.classList.remove("active"));
     document.getElementById(tabId).classList.add("active");
 }
 
 function startGame(gameType) {
+    const level = document.getElementById(`${gameType}-level`).value;
+    if (level === "custom") {
+        const customRange = JSON.parse(sessionStorage.getItem(`${gameType}-customRange`));
+        if (!customRange) {
+            openCustomModal(gameType);
+            return;
+        }
+    }
+
     gameState.activeGame = gameType;
     gameState.score = 0;
 
-    const mode = document.getElementById(`${gameType}-mode`).value;
-    const level = document.getElementById(`${gameType}-level`).value;
     const time = parseInt(document.getElementById(`${gameType}-time`).value);
-
     gameState.timeLeft = time * 60;
-
     document.getElementById(`${gameType}-score`).textContent = gameState.score;
 
     const container = document.getElementById(`${gameType}-question`).closest(".tab-content");
@@ -127,7 +148,7 @@ function startGame(gameType) {
 
     updateTimerDisplay(gameType);
     startTimer(gameType);
-    generateQuestion(gameType, mode, level);
+    generateQuestion(gameType, document.getElementById(`${gameType}-mode`).value, level);
 }
 
 function startTimer(gameType) {
@@ -148,12 +169,22 @@ function updateTimerDisplay(gameType) {
 }
 
 function generateQuestion(gameType, mode, level) {
-    let maxNumber = { easy: 30, medium: 50, hard: 100 }[level];
-    if (gameType === "cube") {
-        maxNumber = { easy: 20, medium: 30, hard: 50 }[level];
+    let min = 1, max = 10;
+    if (level === "custom") {
+        const stored = JSON.parse(sessionStorage.getItem(`${gameType}-customRange`));
+        if (stored) {
+            min = stored.min;
+            max = stored.max;
+        }
+    } else {
+        const defaults = {
+            square: { easy: 30, medium: 50, hard: 100 },
+            cube: { easy: 20, medium: 30, hard: 50 }
+        };
+        max = defaults[gameType][level];
     }
-    const num = Math.floor(Math.random() * maxNumber) + 1;
 
+    const num = Math.floor(Math.random() * (max - min + 1)) + min;
     const questionObj = mode === "direct"
         ? { question: `${num}${gameType === "square" ? "²" : "³"}`, answer: gameType === "square" ? num ** 2 : num ** 3 }
         : { question: `${gameType === "square" ? "√" : "∛"}${gameType === "square" ? num ** 2 : num ** 3}`, answer: num };
@@ -176,7 +207,6 @@ function checkAnswer(gameType) {
 
     const questionDiv = document.getElementById(`${gameType}-question`);
     questionDiv.classList.add("correct");
-
     playTingSound();
 
     setTimeout(() => {
@@ -189,7 +219,10 @@ function checkAnswer(gameType) {
 
 function endGame(gameType) {
     clearInterval(gameState.timer);
-    alert(`Game Over! Your score: ${gameState.score}`);
+
+    // Show final score modal
+    document.getElementById("final-score-text").textContent = `Your score: ${gameState.score}`;
+    document.getElementById("score-modal").style.display = "block";
 
     const entry = {
         score: gameState.score,
@@ -246,4 +279,36 @@ function loadHighScores() {
     function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
+}
+
+// MODAL HANDLERS
+function openCustomModal(gameType) {
+    const modal = document.getElementById("custom-level-modal");
+    modal.style.display = "block";
+    modal.dataset.gameType = gameType;
+}
+
+function closeModal() {
+    document.getElementById("score-modal").style.display = "none";
+}
+
+function closeCustomModal() {
+    document.getElementById("custom-level-modal").style.display = "none";
+}
+
+// Called by Save button in custom modal
+function saveCustomRange() {
+    const modal = document.getElementById("custom-level-modal");
+    const gameType = modal.dataset.gameType;
+    const min = parseInt(document.getElementById("custom-min").value);
+    const max = parseInt(document.getElementById("custom-max").value);
+
+    if (isNaN(min) || isNaN(max) || min >= max) {
+        alert("Please enter a valid range where min < max");
+        return;
+    }
+
+    sessionStorage.setItem(`${gameType}-customRange`, JSON.stringify({ min, max }));
+    closeCustomModal();
+    startGame(gameType);
 }
