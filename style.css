@@ -88,7 +88,9 @@ input[id="tab2"]:checked~.bg-slider {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.mode-select, .level-select, .time-select{
+.mode-select,
+.level-select,
+.time-select {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -140,7 +142,7 @@ input[id="tab2"]:checked~.bg-slider {
 
 .score {
     text-align: left;
-   font-size: larger;
+    font-size: larger;
 }
 
 .timer-score-wrap {
@@ -224,6 +226,8 @@ input[id="tab2"]:checked~.bg-slider {
 }
 
 .high-scores {
+    max-width: 500px;
+    margin: auto;
     margin-top: 10px;
     padding: 10px;
     background-color: #fafafa;
@@ -269,13 +273,14 @@ input[id="tab2"]:checked~.bg-slider {
     font-weight: bold;
 }
 
-.footer{
+.footer {
     margin-top: 10px;
 }
 
 .score-list li {
     margin-bottom: 2.5px;
     line-height: 1.6;
+    text-align: center;
 }
 
 .score-list span {
@@ -290,47 +295,166 @@ input[id="tab2"]:checked~.bg-slider {
 
 /* Modes */
 .direct {
-    background-color: #007bff; /* Blue */
+    background-color: #007bff;
+    /* Blue */
 }
 
 .reverse {
-    background-color: #6f42c1; /* Purple */
+    background-color: #6f42c1;
+    /* Purple */
 }
 
 /* Levels */
 .easy {
-    background-color: #28a745; /* Green */
+    background-color: #28a745;
+    /* Green */
 }
 
 .medium {
-    background-color: #ffc107; /* Yellow */
+    background-color: #ffc107;
+    /* Yellow */
     color: black;
 }
 
 .hard {
-    background-color: #dc3545; /* Red */
+    background-color: #dc3545;
+    /* Red */
+}
+
+.custom {
+    background-color: #1057a8;
+    /* Red */
 }
 
 /* Times */
 .time-1 {
-    background-color: #17a2b8; /* Teal */
+    background-color: #17a2b8;
+    /* Teal */
 }
 
 .time-2 {
-    background-color: #fd7e14; /* Orange */
+    background-color: #fd7e14;
+    /* Orange */
 }
 
 .time-5 {
-    background-color: #343a40; /* Dark */
+    background-color: #343a40;
+    /* Dark */
 }
 
 /* Date */
 .date {
-    background-color: #6c757d; /* Gray */
+    background-color: #6c757d;
+    /* Gray */
     color: white;
 }
 
-a{
+a {
     text-decoration: none;
     color: #007bff;
+}
+
+
+/* Modal overlay */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black with opacity */
+}
+
+/* Modal content box */
+.modal-content {
+    background-color: #fff;
+    margin:30% auto;
+    padding: 20px 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Close button */
+.modal-content .close {
+    color: #888;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: -10px;
+}
+
+.modal-content .close:hover {
+    color: #000;
+}
+
+/* Modal buttons */
+.modal-content button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #bfc6f4;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    background-color: #9da6e0;
+}
+
+/* Input fields for custom range */
+#custom-level-modal input[type="number"] {
+    display: block;
+    width: 100%;
+    margin: 10px auto;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+
+.attempts {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    max-height: 40vh;
+    overflow-y: auto;
+}
+
+.attempt-entry {
+    display: flex;
+    justify-content: space-between;
+    background: #f5f7ff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.attempt-question {
+    font-weight: bold;
+    color: #333;
+}
+
+.attempt-answer {
+    color: #555;
+}
+
+.attempt-time {
+    font-weight: bold;
+    color: #6b6b6b;
 }
