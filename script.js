@@ -9,6 +9,9 @@ const gameState = {
     timeLeft: 0,
     score: 0,
     currentQuestion: null,
+    lastNumber: null,
+    startTime: null,
+    attempts: [],
     highScores: {
         square: JSON.parse(localStorage.getItem("squareHighScores")) || [],
         cube: JSON.parse(localStorage.getItem("cubeHighScores")) || [],
@@ -22,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateTab() {
         exitGame();
-        contents.forEach((content) => content.classList.remove("active"));
+        contents.forEach(content => content.classList.remove("active"));
         if (tabs[0].checked) {
             document.getElementById("destination-content").classList.add("active");
         } else {
@@ -30,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    tabs.forEach((tab) => tab.addEventListener("change", updateTab));
+    tabs.forEach(tab => tab.addEventListener("change", updateTab));
     updateTab();
 
     setupEventListeners();
@@ -62,7 +65,6 @@ function setupEventListeners() {
     setupKeypad("square");
     setupKeypad("cube");
 
-    // Listen for "Custom" level changes to open modal
     ["square", "cube"].forEach(gameType => {
         const levelSelect = document.getElementById(`${gameType}-level`);
         levelSelect.addEventListener("change", () => {
@@ -84,7 +86,7 @@ function setupKeypad(gameType) {
     const input = document.getElementById(`${gameType}-answer`);
     const keypad = container.querySelector(".keypad");
 
-    keypad.querySelectorAll(".key:not(.clear):not(.back)").forEach((btn) => {
+    keypad.querySelectorAll(".key:not(.clear):not(.back)").forEach(btn => {
         btn.addEventListener("click", () => {
             input.value += btn.textContent;
             playKeySound();
@@ -119,7 +121,7 @@ function playTingSound() {
 
 function switchTab(tabId) {
     exitGame();
-    document.querySelectorAll(".tab-content").forEach((tab) => tab.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
     document.getElementById(tabId).classList.add("active");
 }
 
@@ -135,6 +137,8 @@ function startGame(gameType) {
 
     gameState.activeGame = gameType;
     gameState.score = 0;
+    gameState.attempts = [];
+    gameState.lastNumber = null;
 
     const time = parseInt(document.getElementById(`${gameType}-time`).value);
     gameState.timeLeft = time * 60;
@@ -184,12 +188,19 @@ function generateQuestion(gameType, mode, level) {
         max = defaults[gameType][level];
     }
 
-    const num = Math.floor(Math.random() * (max - min + 1)) + min;
+    let num;
+    do {
+        num = Math.floor(Math.random() * (max - min + 1)) + min;
+    } while (num === gameState.lastNumber);
+    gameState.lastNumber = num;
+
     const questionObj = mode === "direct"
-        ? { question: `${num}${gameType === "square" ? "²" : "³"}`, answer: gameType === "square" ? num ** 2 : num ** 3 }
-        : { question: `${gameType === "square" ? "√" : "∛"}${gameType === "square" ? num ** 2 : num ** 3}`, answer: num };
+        ? { question: `${num}${gameType === "square" ? "²" : "³"}`, answer: gameType === "square" ? num ** 2 : num ** 3, base: num }
+        : { question: `${gameType === "square" ? "√" : "∛"}${gameType === "square" ? num ** 2 : num ** 3}`, answer: num, base: num };
 
     gameState.currentQuestion = questionObj;
+    gameState.startTime = Date.now();
+
     document.getElementById(`${gameType}-question`).textContent = questionObj.question;
     const input = document.getElementById(`${gameType}-answer`);
     input.value = "";
@@ -202,7 +213,14 @@ function checkAnswer(gameType) {
     if (isNaN(val)) return;
     if (val !== gameState.currentQuestion.answer) return;
 
-    gameState.score += 10;
+    const timeTaken = (Date.now() - gameState.startTime) / 1000;
+    gameState.attempts.push({
+        question: gameState.currentQuestion.question,
+        answer: gameState.currentQuestion.answer,
+        timeTaken: timeTaken.toFixed(2)
+    });
+
+    gameState.score++;
     document.getElementById(`${gameType}-score`).textContent = gameState.score;
 
     const questionDiv = document.getElementById(`${gameType}-question`);
@@ -220,22 +238,52 @@ function checkAnswer(gameType) {
 function endGame(gameType) {
     clearInterval(gameState.timer);
 
-    // Show final score modal
-    document.getElementById("final-score-text").textContent = `Your score: ${gameState.score}`;
+    // Group attempts by unique question
+    const grouped = {};
+    gameState.attempts.forEach(a => {
+        const key = a.question;
+        if (!grouped[key]) {
+            grouped[key] = a;
+        } else {
+            grouped[key].timeTaken = Math.max(grouped[key].timeTaken, a.timeTaken);
+        }
+    });
+
+    // Convert to array and sort descending by time
+    const uniqueAttempts = Object.values(grouped).sort((a, b) => b.timeTaken - a.timeTaken);
+
+    // Generate HTML with divs and classes
+    const listHTML = uniqueAttempts.map(a => `
+        <li>
+            <div class="attempt-entry">
+                <span class="attempt-question">${a.question}</span>
+                <span class="attempt-answer">${a.answer}</span>
+                <span class="attempt-time">${a.timeTaken}s</span>
+            </div>
+        </li>
+    `).join("");
+
+    document.getElementById("final-score-text").innerHTML = `
+        <h3>Your score: ${gameState.score}</h3>
+        <ul class="attempts">${listHTML}</ul>
+    `;
     document.getElementById("score-modal").style.display = "block";
 
-    const entry = {
-        score: gameState.score,
-        mode: document.getElementById(`${gameType}-mode`).value,
-        level: document.getElementById(`${gameType}-level`).value,
-        time: document.getElementById(`${gameType}-time`).value,
-        date: new Date().toLocaleDateString(),
-    };
+    const level = document.getElementById(`${gameType}-level`).value;
+    if (level !== "custom") {
+        const entry = {
+            score: gameState.score,
+            mode: document.getElementById(`${gameType}-mode`).value,
+            level: level,
+            time: document.getElementById(`${gameType}-time`).value,
+            date: new Date().toLocaleDateString()
+        };
 
-    gameState.highScores[gameType].push(entry);
-    gameState.highScores[gameType].sort((a, b) => b.score - a.score);
-    gameState.highScores[gameType] = gameState.highScores[gameType].slice(0, 5);
-    localStorage.setItem(`${gameType}HighScores`, JSON.stringify(gameState.highScores[gameType]));
+        gameState.highScores[gameType].push(entry);
+        gameState.highScores[gameType].sort((a, b) => b.score - a.score);
+        gameState.highScores[gameType] = gameState.highScores[gameType].slice(0, 5);
+        localStorage.setItem(`${gameType}HighScores`, JSON.stringify(gameState.highScores[gameType]));
+    }
 
     loadHighScores();
 
@@ -245,6 +293,7 @@ function endGame(gameType) {
     container.querySelector(".high-scores").style.visibility = "visible";
     document.getElementById(`${gameType}-scores`).style.display = "block";
 }
+
 
 function loadHighScores() {
     const formatDate = (inputDate) => {
@@ -296,19 +345,53 @@ function closeCustomModal() {
     document.getElementById("custom-level-modal").style.display = "none";
 }
 
-// Called by Save button in custom modal
 function saveCustomRange() {
     const modal = document.getElementById("custom-level-modal");
     const gameType = modal.dataset.gameType;
     const min = parseInt(document.getElementById("custom-min").value);
     const max = parseInt(document.getElementById("custom-max").value);
 
-    if (isNaN(min) || isNaN(max) || min >= max) {
-        alert("Please enter a valid range where min < max");
+    if (isNaN(min) || isNaN(max) || min >= max || max - min < 5) {
+        alert("Please enter a valid range with a minimum gap of 5 where min < max");
         return;
     }
 
     sessionStorage.setItem(`${gameType}-customRange`, JSON.stringify({ min, max }));
     closeCustomModal();
     startGame(gameType);
+}
+
+
+
+
+//============================================
+
+document.addEventListener("keydown", (e) => {
+    const activeType = gameState.activeGame;
+    if (!activeType) return;
+
+    const input = document.getElementById(`${activeType}-answer`);
+    const key = e.key;
+
+    if (key >= '0' && key <= '9') {
+        input.value += key;
+        playKeySound();
+        checkAnswer(activeType);
+    } else if (key === "Backspace") {
+        input.value = input.value.slice(0, -1);
+        playKeySound();
+    } else if (key === "Escape") {
+        input.value = "";
+        playKeySound();
+    }
+});
+
+
+
+function playKeySound() {
+    const sound = document.getElementById("keySound");
+    if (sound) {
+        sound.currentTime = 0;
+        sound.play();
+    }
 }
