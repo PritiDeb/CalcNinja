@@ -280,6 +280,7 @@ input[id="tab2"]:checked~.bg-slider {
 .score-list li {
     margin-bottom: 2.5px;
     line-height: 1.6;
+    text-align: center;
 }
 
 .score-list span {
@@ -372,7 +373,7 @@ a {
 /* Modal content box */
 .modal-content {
     background-color: #fff;
-    margin: 10% auto;
+    margin:30% auto;
     padding: 20px 30px;
     border-radius: 10px;
     width: 90%;
